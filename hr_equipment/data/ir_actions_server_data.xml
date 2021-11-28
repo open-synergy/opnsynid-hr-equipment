@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2019 OpenSynergy Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<openerp>
+<data>
+<record id="ir_action_server_01" model="ir.actions.server">
+    <field name="name">Open My Equipment</field>
+    <field name="type">ir.actions.server</field>
+    <field name="state">code</field>
+    <field name="model_id" ref="stock.model_stock_quant" />
+    <field name="code">
+
+employees = env.user.employee_ids
+if len(employees) == 0:
+    raise Warning("User not link to employee")
+
+employee = employees[0]
+
+if not employee.address_id:
+    raise Warning("No link to partner data")
+
+location = object.address_id.property_stock_employee_id
+
+if not location:
+    raise Warning("No equipment location defined")
+
+waction = env.ref("stock.menu_quants").read()[0]
+waction["name"] = "My Equipment"
+waction["domain"] = [('location_id','=',location.id)]
+action = waction
+    </field>
+</record>
+
+<menuitem
+            id="hr_my_equipment_menu"
+            name="My Equipments"
+            parent="hr_equipment_root_menu"
+            action="ir_action_server_01"
+            sequence="1"
+        />
+
+</data>
+</openerp>

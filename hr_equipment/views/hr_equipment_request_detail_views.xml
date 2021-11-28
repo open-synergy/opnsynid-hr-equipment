@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2020 OpenSynergy Indonesia
+     Copyright 2020 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<openerp>
+<data>
+<record id="hr_equipment_request_detail_view_search" model="ir.ui.view">
+    <field name="name">hr.equipment_request_detail form</field>
+    <field name="model">hr.equipment_request_detail</field>
+    <field name="arch" type="xml">
+        <search>
+            <field name="name" />
+            <field name="employee_id" />
+            <field name="department_id" />
+            <field name="manager_id" />
+            <field name="job_id" />
+            <field name="type_id" />
+            <field name="product_id" />
+            <field name="equipment_placement" />
+            <field name="location_id" />
+            <group name="group" string="Group By">
+                <filter
+                            name="grp_employee"
+                            string="Employee"
+                            context="{'group_by':'employee_id'}"
+                            invisible="context.get('hide_employee',False)"
+                        />
+                <filter
+                            name="grp_department"
+                            string="Department"
+                            context="{'group_by':'department_id'}"
+                        />
+                <filter
+                            name="grp_manager"
+                            string="Manager"
+                            context="{'group_by':'manager_id'}"
+                        />
+                <filter
+                            name="grp_job"
+                            string="Job Position"
+                            context="{'group_by':'job_id'}"
+                        />
+                <filter
+                            name="grp_type"
+                            string="Type"
+                            context="{'group_by':'type_id'}"
+                        />
+                <filter
+                            name="grp_product"
+                            string="Product"
+                            context="{'group_by':'product_id'}"
+                        />
+                <filter
+                            name="grp_location"
+                            string="Location"
+                            context="{'group_by':'location_id'}"
+                        />
+            </group>
+        </search>
+    </field>
+</record>
+
+<record id="hr_equipment_request_detail_view_tree" model="ir.ui.view">
+    <field name="name">hr.equipment_request_detail tree</field>
+    <field name="model">hr.equipment_request_detail</field>
+    <field name="arch" type="xml">
+        <tree create="false" delete="false">
+            <field name="id" />
+            <field name="request_id" />
+            <field name="employee_id" />
+            <field name="department_id" />
+            <field name="manager_id" />
+            <field name="job_id" />
+            <field name="type_id" />
+            <field name="product_id" />
+            <field name="state" />
+        </tree>
+    </field>
+</record>
+
+<record id="hr_equipment_request_detail_view_form" model="ir.ui.view">
+    <field name="name">hr.equipment_request_detail form</field>
+    <field name="model">hr.equipment_request_detail</field>
+    <field name="arch" type="xml">
+        <form create="false" delete="false">
+            <header>
+                <button
+                            name="%(base_print_policy.base_print_document_action)d"
+                            string="Print"
+                            type="action"
+                            icon="gtk-print"
+                        />
+                <field
+                            name="state"
+                            widget="statusbar"
+                            statusbar_visible="draft,plan,open"
+                        />
+            </header>
+            <sheet>
+                <div
+                            class="oe_right oe_button_box"
+                            style="width: 300px;"
+                            name="buttons"
+                        >
+                </div>
+                <div class="oe_left" style="width: 500px;">
+                </div>
+                <group name="group_1" colspan="4" col="2">
+                    <group name="group_1_1" colspan="1" col="2">
+                        <field name="type_id" readonly="1" />
+                        <field name="employee_id" readonly="1" />
+                        <field
+                                    name="department_id"
+                                    readonly="1"
+                                    groups="base.group_system"
+                                />
+                        <field
+                                    name="manager_id"
+                                    readonly="1"
+                                    groups="base.group_system"
+                                />
+                        <field name="job_id" readonly="1" groups="base.group_system" />
+                        <field name="product_id" />
+                        <field name="name" readonly="1" />
+                    </group>
+                    <group name="group_1_2">
+                        <field name="show_equipment_placement" invisible="1" />
+                        <field
+                                    name="equipment_placement"
+                                    readonly="1"
+                                    attrs="{'invisible':[('show_equipment_placement','=',False)]}"
+                                />
+                        <field
+                                    name="allowed_location_ids"
+                                    widget="many2many_tags"
+                                    invisible="1"
+                                />
+                        <field
+                                    name="location_id"
+                                    readonly="1"
+                                    domain="[('id','=',allowed_location_ids[0][2])]"
+                                />
+                     </group>
+                </group>
+                <notebook colspan="4">
+                  <page name="inventory" string="Inventory">
+                      <group name="inventory_1" colspan="4" col="2">
+                          <field
+                                        name="allowed_route_ids"
+                                        widget="many2many_tags"
+                                        invisible="1"
+                                    />
+                          <field
+                                        name="route_id"
+                                        domain="[('id','=',allowed_route_ids[0][2])]"
+                                    />
+                          <field name="procurement_id" />
+                      </group>
+                  </page>
+                  <page name="move" string="Moves">
+                      <field name="move_ids" />
+                  </page>
+                </notebook>
+            </sheet>
+            <div class="oe_chatter">
+                <field
+                            name="message_follower_ids"
+                            widget="mail_followers"
+                            groups="base.group_user"
+                        />
+                <field name="message_ids" widget="mail_thread" />
+            </div>
+        </form>
+    </field>
+</record>
+
+<record id="hr_equipment_request_detail_action" model="ir.actions.act_window">
+    <field name="name">Equipment Request Details</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">hr.equipment_request_detail</field>
+    <field name="view_type">form</field>
+    <field name="view_mode">tree,form</field>
+</record>
+
+<menuitem
+            id="hr_equipment_request_detail_menu"
+            name="Equipment Request Details"
+            parent="hr_equipment_root_menu"
+            action="hr_equipment_request_detail_action"
+            sequence="3"
+        />
+</data>
+</openerp>

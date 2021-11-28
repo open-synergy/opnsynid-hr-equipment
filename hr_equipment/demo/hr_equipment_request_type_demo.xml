@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2020 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<openerp>
+<data>
+<record id="demo_equipment_request_type01" model="hr.equipment_request_type">
+    <field name="name">Personal Equipment - (test)</field>
+    <field name="code">T001</field>
+    <field
+                name="allowed_product_ids"
+                eval="[(6,0,[ref('product.product_product_8'),ref('product.product_product_25'),ref('product.product_product_26')])]"
+            />
+</record>
+
+<record id="demo_equipment_request_type02" model="hr.equipment_request_type">
+    <field name="name">R&amp;D - (test)</field>
+    <field name="code">T002</field>
+    <field
+                name="allowed_product_ids"
+                eval="[(6,0,[ref('product.product_product_45'),ref('product.product_product_47'),ref('product.product_product_26')])]"
+            />
+</record>
+</data>
+</openerp>

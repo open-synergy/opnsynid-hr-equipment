@@ -1,0 +1,483 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2020 OpenSynergy Indonesia
+     Copyright 2020 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<openerp>
+<data>
+<record id="hr_equipment_request_view_search" model="ir.ui.view">
+    <field name="name">hr.equipment_request form</field>
+    <field name="model">hr.equipment_request</field>
+    <field name="arch" type="xml">
+        <search>
+            <field name="name" />
+            <field name="company_id" groups="base.group_multi_company" />
+            <field name="employee_id" invisible="context.get('hide_employee',False)" />
+            <field name="department_id" />
+            <field name="manager_id" />
+            <field name="job_id" />
+            <field name="type_id" />
+            <field name="reason_id" />
+            <group name="dom_state" string="State">
+                <filter
+                            name="dom_draft"
+                            string="Draft"
+                            domain="[('state','=','draft')]"
+                        />
+                <filter
+                            name="dom_confirm"
+                            string="Waiting for Approval"
+                            domain="[('state','=','confirm')]"
+                        />
+                <filter
+                            name="dom_approve"
+                            string="Procurement Planning"
+                            domain="[('state','=','approve')]"
+                        />
+                <filter
+                            name="dom_open"
+                            string="Waiting for Realization"
+                            domain="[('state','=','open')]"
+                        />
+                <filter name="dom_done" string="Done" domain="[('state','=','done')]" />
+                <filter
+                            name="dom_cancel"
+                            string="Cancel"
+                            domain="[('state','=','cancel')]"
+                        />
+                <filter
+                            name="needs_review"
+                            string="Needs my Review"
+                            domain="[('reviewer_ids','in',uid), ('state', 'not in', ['done', 'cancel'])]"
+                            help="My documents to review"
+                        />
+            </group>
+            <group name="group" string="Group By">
+                <filter
+                            name="grp_company"
+                            string="Company"
+                            context="{'group_by':'company_id'}"
+                            groups="base.group_multi_company"
+                        />
+                <filter
+                            name="grp_employee"
+                            string="Employee"
+                            context="{'group_by':'employee_id'}"
+                            invisible="context.get('hide_employee',False)"
+                        />
+                <filter
+                            name="grp_department"
+                            string="Department"
+                            context="{'group_by':'department_id'}"
+                        />
+                <filter
+                            name="grp_manager"
+                            string="Manager"
+                            context="{'group_by':'manager_id'}"
+                        />
+                <filter
+                            name="grp_job"
+                            string="Job Position"
+                            context="{'group_by':'job_id'}"
+                        />
+                <filter
+                            name="grp_type"
+                            string="Type"
+                            context="{'group_by':'type_id'}"
+                        />
+                <filter
+                            name="grp_reason"
+                            string="Reason"
+                            context="{'group_by':'reason_id'}"
+                        />
+                <filter
+                            name="grp_date_request_year"
+                            string="Date Request by Year"
+                            context="{'group_by':'date_request:year'}"
+                        />
+                <filter
+                            name="grp_date_request_month"
+                            string="Date Request by Month"
+                            context="{'group_by':'date_request:month'}"
+                        />
+                <filter
+                            name="grp_date_request_week"
+                            string="Date Request by Week"
+                            context="{'group_by':'date_request:week'}"
+                        />
+                <filter
+                            name="grp_date_request_day"
+                            string="Date Request by Day"
+                            context="{'group_by':'date_request:day'}"
+                        />
+            </group>
+        </search>
+    </field>
+</record>
+
+<record id="hr_equipment_request_view_tree" model="ir.ui.view">
+    <field name="name">hr.equipment_request tree</field>
+    <field name="model">hr.equipment_request</field>
+    <field name="arch" type="xml">
+        <tree>
+            <field name="id" />
+            <field name="display_name" string="# Document" />
+            <field name="company_id" groups="base.group_multi_company" />
+            <field name="employee_id" invisible="context.get('hide_employee',False)" />
+            <field name="department_id" />
+            <field name="manager_id" />
+            <field name="job_id" />
+            <field name="date_request" />
+            <field name="type_id" />
+            <field name="reason_id" />
+            <field name="state" />
+        </tree>
+    </field>
+</record>
+
+<record id="hr_equipment_request_view_form" model="ir.ui.view">
+    <field name="name">hr.equipment_request form</field>
+    <field name="model">hr.equipment_request</field>
+    <field name="arch" type="xml">
+        <form>
+            <header>
+                <button
+                            name="action_confirm"
+                            type="object"
+                            string="Confirm"
+                            class="oe_highlight"
+                            confirm="Confirm document. Are you sure?"
+                            attrs="{'invisible':['|',('state','!=','draft'),('confirm_ok','=',False)]}"
+                        />
+                <button
+                            name="action_open"
+                            type="object"
+                            string="Procure"
+                            class="oe_highlight"
+                            confirm="Plan document. Are you sure?"
+                            attrs="{'invisible':['|',('state','!=','approve'),('open_ok','=',False)]}"
+                        />
+                <button
+                            name="action_done"
+                            type="object"
+                            string="Done"
+                            class="oe_highlight"
+                            confirm="Finished document. Are you sure?"
+                            attrs="{'invisible':['|',('state','!=','open'),('done_ok','=',False)]}"
+                        />
+                <button
+                            name="request_validation"
+                            string="Request Validation"
+                            attrs="{'invisible': ['|','|',('need_validation', '!=', True),('rejected','=',True),('state','not in',['confirm'])]}"
+                            class="oe_highlight"
+                            type="object"
+                        />
+                <button
+                            name="restart_validation"
+                            string="Restart Validation"
+                            attrs="{'invisible': ['|','|','|',('review_ids', '=', []),('rejected','=',False),('state','not in',['confirm']),('restart_approval_ok','=',False)]}"
+                            type="object"
+                        />
+                <button
+                            name="%(base_print_policy.base_print_document_action)d"
+                            string="Print"
+                            type="action"
+                            icon="gtk-print"
+                        />
+                <button
+                            name="%(base_cancel_reason.base_cancel_reason_wizard_action)d"
+                            type="action"
+                            string="Cancel"
+                            attrs="{'invisible':['|',('state','in',['cancel','done']),('cancel_ok','=',False)]}"
+                            confirm="Cancel document. Are you sure?"
+                        />
+                <button
+                            name="action_restart"
+                            type="object"
+                            string="Restart"
+                            confirm="Restart document. Are you sure?"
+                            attrs="{'invisible':['|',('state','!=','cancel'),('restart_ok','=',False)]}"
+                        />
+                <field
+                            name="state"
+                            widget="statusbar"
+                            statusbar_visible="draft,confirm,approve"
+                        />
+            </header>
+            <field name="need_validation" invisible="1" />
+            <field name="validated" invisible="1" />
+            <field name="rejected" invisible="1" />
+            <div
+                        class="alert alert-warning"
+                        attrs="{'invisible': ['|', '|', '|',
+                 ('validated', '=', True), ('state', 'not in', ['confirm']),
+                 ('rejected', '=', True), ('review_ids', '=', [])]}"
+                        style="margin-bottom:0px;"
+                    >
+                <p><i class="fa fa-info-circle" />This document needs to be
+                    validated.
+                    <button
+                                name="validate_tier"
+                                string="Validate"
+                                attrs="{'invisible': [('review_ids', '=', [])]}"
+                                type="object"
+                                class="oe_inline oe_button btn-success"
+                                icon="terp-check"
+                            />
+                    <button
+                                name="reject_tier"
+                                string="Reject"
+                                type="object"
+                                class="btn-icon btn-danger"
+                                icon="terp-gtk-stop"
+                            />
+                </p>
+            </div>
+            <div
+                        class="alert alert-success"
+                        attrs="{'invisible': ['|', '|', ('validated', '!=', True), ('state', 'not in', ['confirm']), ('review_ids', '=', [])]}"
+                        style="margin-bottom:0px;"
+                    >
+                <p><i class="fa fa-thumbs-up" /> Operation has been <b
+                            >validated</b>!</p>
+            </div>
+            <div
+                        class="alert alert-danger"
+                        attrs="{'invisible': ['|', '|', ('rejected', '!=', True), ('state', 'not in', ['confirm']), ('review_ids', '=', [])]}"
+                        style="margin-bottom:0px;"
+                    >
+                <p><i class="fa fa-thumbs-down" /> Operation has been <b
+                            >rejected</b>.</p>
+            </div>
+            <sheet>
+                <div
+                            class="oe_right oe_button_box"
+                            style="width: 300px;"
+                            name="buttons"
+                        >
+                </div>
+                <div class="oe_left" style="width: 500px;">
+                    <div class="oe_title" style="width: 500px;">
+                        <label for="name" />
+                        <h1>
+                            <field name="name" class="oe_edit_only" />
+                            <field name="display_name" class="oe_read_only" />
+                        </h1>
+                        <h2 attrs="{'invisible': [('state', '!=', 'cancel')]}">
+                            <label
+                                        for="cancel_reason_id"
+                                        string="Cancellation reason:"
+                                    />
+                            <field name="cancel_reason_id" class="oe_inline" />
+                        </h2>
+                    </div>
+                </div>
+                <group name="group_1" colspan="4" col="2">
+                    <group name="group_1_1" colspan="1" col="2">
+                        <field name="company_id" groups="base.group_multi_company" />
+                        <field
+                                    name="employee_id"
+                                    invisible="context.get('hide_employee',False)"
+                                />
+                        <field name="department_id" groups="base.group_system" />
+                        <field name="manager_id" groups="base.group_system" />
+                        <field name="job_id" groups="base.group_system" />
+                    </group>
+                    <group name="group_1_2">
+                        <field name="date_request" />
+                        <field name="type_id" />
+                        <field name="reason_id" />
+                        <field
+                                    name="allowed_product_categ_ids"
+                                    widget="many2many_tags"
+                                    invisible="1"
+                                />
+                        <field
+                                    name="allowed_product_ids"
+                                    widget="many2many_tags"
+                                    invisible="1"
+                                />
+                    </group>
+                </group>
+                <notebook colspan="4">
+                    <page string="Details" name="detail">
+                        <field
+                                    name="detail_ids"
+                                    context="{'default_type_id': type_id, 'default_employee_id': employee_id}"
+                                >
+                            <tree>
+
+                                <field name="name" />
+                                <field name="product_id" />
+                                <field name="equipment_placement" />
+                                <field name="location_id" />
+                                <field name="state" />
+                            </tree>
+                            <form>
+                                <header>
+                                    <field
+                                                name="state"
+                                                widget="statusbar"
+                                                statusbar_visible="draft,plan,open"
+                                            />
+                                </header>
+                                <sheet>
+                                    <group name="detail_form_1" colspan="4" col="2">
+                                        <group
+                                                    name="detail_form_1_1"
+                                                    colspan="1"
+                                                    col="2"
+                                                >
+                                            <field name="type_id" />
+                                            <field name="employee_id" />
+                                            <field
+                                                        name="product_id"
+                                                        domain="['|',('id','in',parent.allowed_product_ids[0][2]),('categ_id','in',parent.allowed_product_categ_ids[0][2])]"
+                                                    />
+                                            <field name="name" />
+                                        </group>
+                                        <group
+                                                    name="detail_form_1_2"
+                                                    colspan="1"
+                                                    col="2"
+                                                >
+                                            <field
+                                                        name="show_equipment_placement"
+                                                        invisible="1"
+                                                    />
+                                            <field
+                                                        name="equipment_placement"
+                                                        attrs="{'invisible':[('show_equipment_placement','=',False)]}"
+                                                    />
+                                            <field
+                                                        name="allowed_location_ids"
+                                                        widget="many2many_tags"
+                                                        invisible="1"
+                                                    />
+                                            <field
+                                                        name="location_id"
+                                                        domain="[('id','=',allowed_location_ids[0][2])]"
+                                                    />
+                                        </group>
+                                    </group>
+                                    <notebook>
+                                        <page name="inventory" string="Inventory">
+                                            <group
+                                                        name="inventory_1"
+                                                        colspan="4"
+                                                        col="2"
+                                                    >
+                                                <field
+                                                            name="allowed_route_ids"
+                                                            widget="many2many_tags"
+                                                            invisible="1"
+                                                        />
+                                                <field
+                                                            name="route_id"
+                                                            domain="[('id','=',allowed_route_ids[0][2])]"
+                                                        />
+                                                <field name="procurement_id" />
+                                            </group>
+                                        </page>
+                                    </notebook>
+                                </sheet>
+                            </form>
+                        </field>
+                    </page>
+                    <page name="inventory" string="Inventory">
+                        <group name="inventory_1" colspan="4" col="2">
+                            <field name="procurement_group_id" />
+                        </group>
+                    </page>
+                    <page string="Reviews" name="tier_validation">
+                        <group name="tier_validation_1" colspan="4" col="2">
+                            <field name="definition_id" />
+                            <field
+                                        name="reviewer_partner_ids"
+                                        widget="many2many_tags"
+                                    />
+                        </group>
+                        <group name="tier_validation_2" colspan="4" col="2">
+                            <field name="review_ids" readonly="1" />
+                        </group>
+                    </page>
+                    <page name="note" string="Notes">
+                        <field name="note" />
+                    </page>
+                    <page name="policy" string="Policies" groups="base.group_system">
+                        <group name="policy_1" colspan="4" col="2">
+                            <field name="confirm_ok" />
+                            <field name="open_ok" />
+                            <field name="done_ok" />
+                            <field name="restart_approval_ok" />
+                            <field name="cancel_ok" />
+                            <field name="restart_ok" />
+                        </group>
+                    </page>
+                    <page name="log" string="Logs">
+                        <group name="group_5" colspan="4" col="3">
+                            <group name="group_log_1" colspan="4" col="3">
+                                <field name="confirm_date" string="Confirmation" />
+                                <field name="confirm_user_id" nolabel="1" />
+                                <field name="open_date" string="Open" />
+                                <field name="open_user_id" nolabel="1" />
+                                <field name="done_date" string="Finish" />
+                                <field name="done_user_id" nolabel="1" />
+                                <field name="cancel_date" string="Cancellation" />
+                                <field name="cancel_user_id" nolabel="1" />
+                            </group>
+                        </group>
+                    </page>
+                </notebook>
+            </sheet>
+            <div class="oe_chatter">
+                <field
+                            name="message_follower_ids"
+                            widget="mail_followers"
+                            groups="base.group_user"
+                        />
+                <field name="message_ids" widget="mail_thread" />
+            </div>
+        </form>
+    </field>
+</record>
+
+<record id="hr_my_equipment_request_action" model="ir.actions.act_window">
+    <field name="name">My Equipment Requests</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">hr.equipment_request</field>
+    <field name="view_type">form</field>
+    <field name="view_mode">tree,form</field>
+    <field name="domain">[('employee_id.user_id.id','=',uid)]</field>
+    <field
+                name="context"
+            >{'hide_employee': True, 'search_default_dom_draft':1, 'search_default_dom_confirm':1,'search_default_dom_approve':1,'readonly_by_pass': True}</field>
+</record>
+
+<menuitem
+            id="hr_my_reimbursement_menu"
+            name="My Equipment Requests"
+            parent="hr_equipment_root_menu"
+            action="hr_my_equipment_request_action"
+            sequence="1"
+        />
+
+<record id="hr_equipment_request_action" model="ir.actions.act_window">
+    <field name="name">Equipment Requests</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">hr.equipment_request</field>
+    <field name="view_type">form</field>
+    <field name="view_mode">tree,form</field>
+    <field
+                name="context"
+            >{'hide_employee': False, 'search_default_dom_draft':1, 'search_default_dom_confirm':1,'search_default_dom_open':1,'search_default_dom_approve':1,'readonly_by_pass': True}</field>
+</record>
+
+<menuitem
+            id="hr_equipment_request_menu"
+            name="Equipment Requests"
+            parent="hr_equipment_root_menu"
+            action="hr_equipment_request_action"
+            sequence="2"
+        />
+</data>
+</openerp>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2020 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<openerp>
+<data>
+<record id="equipment_request_usability_module_category" model="ir.module.category">
+    <field name="name">Equipment Request Usability</field>
+    <field name="sequence">5</field>
+</record>
+
+<record id="module_equipment_request" model="ir.module.category">
+    <field name="name">Employee Equipment Request</field>
+</record>
+
+<record id="module_equipment_request_viewer" model="ir.module.category">
+    <field name="name">Employee Equipment Request Viewer</field>
+</record>
+
+</data>
+</openerp>

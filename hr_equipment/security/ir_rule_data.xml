@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2019 OpenSynergy Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<openerp>
+<data>
+    <!-- All Employee -->
+<record id="ir_rule_equipment_request_employee" model="ir.rule">
+    <field name="model_id" ref="hr_equipment.model_hr_equipment_request" />
+    <field name="domain_force">[
+        ('employee_id.user_id.id','=',user.id)
+        ]</field>
+    <field name="name">Employee Equipment Request Rule for All Employee</field>
+    <field name="groups" eval="[(4, ref('base.group_user'))]" />
+    <field eval="0" name="perm_unlink" />
+    <field eval="0" name="perm_write" />
+    <field eval="1" name="perm_read" />
+    <field eval="0" name="perm_create" />
+</record>
+
+<record id="ir_rule_equipment_request_user" model="ir.rule">
+    <field name="model_id" ref="hr_equipment.model_hr_equipment_request" />
+    <field name="domain_force">[
+        ('employee_id.user_id.id','=',user.id)
+        ]</field>
+    <field name="name">Employee Equipment Request Rule for User</field>
+    <field name="groups" eval="[(4, ref('group_equipment_request_user'))]" />
+    <field eval="1" name="perm_unlink" />
+    <field eval="1" name="perm_write" />
+    <field eval="1" name="perm_read" />
+    <field eval="1" name="perm_create" />
+</record>
+
+<record id="ir_rule_equipment_request_supervisor" model="ir.rule">
+    <field name="model_id" ref="hr_equipment.model_hr_equipment_request" />
+    <field name="domain_force">[
+        ('employee_id.parent_id.id','=',user.id),
+        ]</field>
+    <field name="name">Employee Equipment Request Rule for Manager</field>
+    <field name="groups" eval="[(4, ref('group_equipment_request_supervisor'))]" />
+    <field eval="1" name="perm_unlink" />
+    <field eval="1" name="perm_write" />
+    <field eval="1" name="perm_read" />
+    <field eval="1" name="perm_create" />
+</record>
+
+<record id="ir_rule_equipment_request_department" model="ir.rule">
+    <field name="model_id" ref="hr_equipment.model_hr_equipment_request" />
+    <field name="domain_force">[
+        ('employee_id.department_id.id','child_of',user.employee_ids[0].department_id.id),
+        ]</field>
+    <field name="name">Employee Equipment Request Rule for Department</field>
+    <field name="groups" eval="[(4, ref('group_equipment_request_department'))]" />
+    <field eval="1" name="perm_unlink" />
+    <field eval="1" name="perm_write" />
+    <field eval="1" name="perm_read" />
+    <field eval="1" name="perm_create" />
+</record>
+
+<record id="ir_rule_equipment_request_company" model="ir.rule">
+    <field name="model_id" ref="hr_equipment.model_hr_equipment_request" />
+    <field name="domain_force">[
+        ('company_id.id','child_of',user.company_id.id),
+        ]</field>
+    <field name="name">Employee Equipment Request Rule for Company</field>
+    <field name="groups" eval="[(4, ref('group_equipment_request_company'))]" />
+    <field eval="1" name="perm_unlink" />
+    <field eval="1" name="perm_write" />
+    <field eval="1" name="perm_read" />
+    <field eval="1" name="perm_create" />
+</record>
+
+<!-- Viewer -->
+<record id="ir_rule_equipment_request_viewer_supervisor" model="ir.rule">
+    <field name="model_id" ref="hr_equipment.model_hr_equipment_request" />
+    <field name="domain_force">[
+        ('employee_id.parent_id.id','=',user.id),
+        ]</field>
+    <field name="name">Employee Equipment Request Viewer Rule for Manager</field>
+    <field
+                name="groups"
+                eval="[(4, ref('group_equipment_request_viewer_supervisor'))]"
+            />
+    <field eval="0" name="perm_unlink" />
+    <field eval="0" name="perm_write" />
+    <field eval="1" name="perm_read" />
+    <field eval="0" name="perm_create" />
+</record>
+
+<record id="ir_rule_equipment_request_viewer_department" model="ir.rule">
+    <field name="model_id" ref="hr_equipment.model_hr_equipment_request" />
+    <field name="domain_force">[
+        ('employee_id.department_id.id','child_of',user.employee_ids[0].department_id.id),
+        ]</field>
+    <field name="name">Employee Equipment Request Viewer Rule for Department</field>
+    <field
+                name="groups"
+                eval="[(4, ref('group_equipment_request_viewer_department'))]"
+            />
+    <field eval="0" name="perm_unlink" />
+    <field eval="0" name="perm_write" />
+    <field eval="1" name="perm_read" />
+    <field eval="0" name="perm_create" />
+</record>
+
+<record id="ir_rule_equipment_request_viewer_company" model="ir.rule">
+    <field name="model_id" ref="hr_equipment.model_hr_equipment_request" />
+    <field name="domain_force">[
+        ('company_id.id','child_of',user.company_id.id),
+        ]</field>
+    <field name="name">Employee Equipment Request Viewer Rule for Company</field>
+    <field name="groups" eval="[(4, ref('group_equipment_request_viewer_company'))]" />
+    <field eval="0" name="perm_unlink" />
+    <field eval="0" name="perm_write" />
+    <field eval="1" name="perm_read" />
+    <field eval="0" name="perm_create" />
+</record>
+
+
+</data>
+</openerp>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2020 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<openerp>
+<data>
+<record id="demo_equipment_request_reason01" model="hr.equipment_request_reason">
+    <field name="name">New equipment - (test)</field>
+    <field name="code">R001</field>
+</record>
+
+<record id="demo_equipment_request_reason02" model="hr.equipment_request_reason">
+    <field name="name">Replacement - (test)</field>
+    <field name="code">R002</field>
+</record>
+</data>
+</openerp>

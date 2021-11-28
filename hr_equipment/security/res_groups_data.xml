@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2020 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<openerp>
+<data>
+<record id="group_equipment_request_user" model="res.groups">
+    <field name="name">User</field>
+    <field name="category_id" ref="module_equipment_request" />
+    <field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+</record>
+
+<record id="group_equipment_request_supervisor" model="res.groups">
+    <field name="name">Supervisor</field>
+    <field name="category_id" ref="module_equipment_request" />
+    <field name="implied_ids" eval="[(4, ref('group_equipment_request_user'))]" />
+</record>
+
+<record id="group_equipment_request_department" model="res.groups">
+    <field name="name">Department</field>
+    <field name="category_id" ref="module_equipment_request" />
+    <field name="implied_ids" eval="[(4, ref('group_equipment_request_supervisor'))]" />
+</record>
+
+<record id="group_equipment_request_company" model="res.groups">
+    <field name="name">Company</field>
+    <field name="category_id" ref="module_equipment_request" />
+    <field name="implied_ids" eval="[(4, ref('group_equipment_request_department'))]" />
+    <field name="users" eval="[(4, ref('base.user_root'))]" />
+</record>
+
+<record id="group_equipment_request_viewer_supervisor" model="res.groups">
+    <field name="name">Supervisor</field>
+    <field name="category_id" ref="module_equipment_request_viewer" />
+    <field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+</record>
+
+<record id="group_equipment_request_viewer_department" model="res.groups">
+    <field name="name">Department</field>
+    <field name="category_id" ref="module_equipment_request_viewer" />
+    <field
+                name="implied_ids"
+                eval="[(4, ref('group_equipment_request_viewer_supervisor'))]"
+            />
+</record>
+
+<record id="group_equipment_request_viewer_company" model="res.groups">
+    <field name="name">Company</field>
+    <field name="category_id" ref="module_equipment_request_viewer" />
+    <field
+                name="implied_ids"
+                eval="[(4, ref('group_equipment_request_viewer_department'))]"
+            />
+    <field name="users" eval="[(4, ref('base.user_root'))]" />
+</record>
+</data>
+</openerp>
