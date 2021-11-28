@@ -450,7 +450,7 @@
     <field name="domain">[('employee_id.user_id.id','=',uid)]</field>
     <field
                 name="context"
-            >{'hide_employee': True, 'search_default_dom_draft':1, 'search_default_dom_confirm':1,'search_default_dom_approve':1,'readonly_by_pass': True}</field>
+            >{'hide_employee': False, 'search_default_dom_draft':1, 'search_default_dom_confirm':1,'search_default_dom_open':1,'search_default_dom_approve':1,'readonly_by_pass': True}</field>
 </record>
 
 <menuitem
