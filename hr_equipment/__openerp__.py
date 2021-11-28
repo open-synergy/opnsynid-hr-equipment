@@ -6,7 +6,7 @@
     "name": "Employee Equipment",
     "website": "https://simetri-sinergi.id",
     "author": "OpenSynergy Indonesia, PT. Simetri Sinergi Indonesia",
-    "version": "8.0.1.8.2",
+    "version": "8.0.1.1.0",
     "license": "AGPL-3",
     "installable": True,
     "application": True,
