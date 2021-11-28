@@ -1,0 +1,37 @@
+<?xml version="1.0" ?>
+<!-- Copyright 2020 OpenSynergy Indonesia
+     Copyright 2020 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<openerp>
+<data>
+<record id="product_template_view_form" model="ir.ui.view">
+    <field name="name">product.template form - Employee equipment</field>
+    <field name="model">product.template</field>
+    <field name="inherit_id" ref="product.product_template_form_view" />
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//page[last()]" position="after">
+                <page name="employee_equipment" string="Employee Equipment">
+                    <group name="employee_equipment_1" colspan="4" col="2">
+                        <field name="restrict_equipment_location" />
+                    </group>
+                    <group
+                                name="employee_equipment_2"
+                                string="Allowed Locations"
+                                colspan="4"
+                                col="2"
+                                attrs="{'invisible':[('restrict_equipment_location','=',False)]}"
+                            >
+                        <field
+                                    name="allowed_equipment_location_ids"
+                                    nolabel="1"
+                                    domain="[('usage','=','internal')]"
+                                />
+                    </group>
+                </page>
+            </xpath>
+        </data>
+    </field>
+</record>
+</data>
+</openerp>

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2020 OpenSynergy Indonesia
+     Copyright 2020 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<openerp>
+<data>
+<record id="hr_equipment_request_type_view_search" model="ir.ui.view">
+    <field name="name">hr.equipment_request_type form</field>
+    <field name="model">hr.equipment_request_type</field>
+    <field name="arch" type="xml">
+        <search>
+            <field name="name" />
+            <field name="code" />
+        </search>
+    </field>
+</record>
+
+<record id="hr_equipment_request_type_view_tree" model="ir.ui.view">
+    <field name="name">hr.equipment_request_type tree</field>
+    <field name="model">hr.equipment_request_type</field>
+    <field name="arch" type="xml">
+        <tree>
+            <field name="sequence" widget="handle" />
+            <field name="name" />
+            <field name="code" />
+        </tree>
+    </field>
+</record>
+
+<record id="hr_equipment_request_type_view_form" model="ir.ui.view">
+    <field name="name">hr.equipment_request_type form</field>
+    <field name="model">hr.equipment_request_type</field>
+    <field name="arch" type="xml">
+        <form>
+            <header />
+            <sheet>
+                <div
+                            class="oe_right oe_button_box"
+                            style="width: 300px;"
+                            name="buttons"
+                        />
+                <group name="group_1" colspan="4" col="2">
+                    <field name="name" />
+                    <field name="code" />
+                    <field name="active" />
+                    <field name="sequence_id" domain="[('code','=','equip.req')]" />
+                </group>
+                <notebook>
+                    <page name="product" string="Allowed Products">
+                        <group
+                                    name="product_1"
+                                    string="Allowed Product Categories"
+                                    colspan="4"
+                                    col="2"
+                                >
+                            <field name="allowed_product_categ_ids" nolabel="1" />
+                        </group>
+                        <group
+                                    name="product_2"
+                                    string="Allowed Products"
+                                    colspan="4"
+                                    col="2"
+                                >
+                            <field name="allowed_product_ids" nolabel="1" />
+                        </group>
+                    </page>
+                    <page name="location" string="Location">
+                        <group name="location_1" colspan="4" col="2">
+                            <field name="default_equipment_placement" />
+                            <field name="show_equipment_placement" />
+                        </group>
+                        <group
+                                    name="location_2"
+                                    colspan="4"
+                                    col="2"
+                                    string="Allowed Location(s)"
+                                >
+                            <field name="allowed_location_ids" nolabel="1" />
+                        </group>
+                    </page>
+                    <page name="route" string="Routes">
+                        <group name="route_1" colspan="4" col="2">
+                            <field name="allowed_route_ids" nolabel="1" />
+                        </group>
+                    </page>
+                    <page name="workflow_policy" string="Workflow Policy">
+                        <group name="workflow_policy_1" colspan="4" col="2">
+                            <field name="confirm_grp_ids" widget="many2many_tags" />
+                            <field name="open_grp_ids" widget="many2many_tags" />
+                            <field name="done_grp_ids" widget="many2many_tags" />
+                            <field
+                                        name="restart_approval_grp_ids"
+                                        widget="many2many_tags"
+                                    />
+                            <field name="cancel_grp_ids" widget="many2many_tags" />
+                            <field name="restart_grp_ids" widget="many2many_tags" />
+                        </group>
+                    </page>
+                    <page name="note" string="Note">
+                        <field name="note" />
+                    </page>
+                </notebook>
+            </sheet>
+        </form>
+    </field>
+</record>
+
+<record id="hr_equipment_request_type_action" model="ir.actions.act_window">
+    <field name="name">Employee Equipment Types</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">hr.equipment_request_type</field>
+    <field name="view_type">form</field>
+    <field name="view_mode">tree,form</field>
+</record>
+
+<menuitem
+            id="hr_equipment_request_type_menu"
+            name="Types"
+            parent="hr_equipment_configuration_menu"
+            action="hr_equipment_request_type_action"
+            sequence="1"
+        />
+</data>
+</openerp>
