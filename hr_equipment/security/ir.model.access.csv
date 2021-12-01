@@ -5,3 +5,5 @@ hr_equipment_request_reason_employee,hr.equipment_request_reason - user,model_hr
 hr_equipment_request_reason_all,hr.equipment_request_reason - all,model_hr_equipment_request_reason,,1,0,0,0
 hr_equipment_request_employee,hr.equipment_request - user,model_hr_equipment_request,base.group_user,1,1,1,1
 hr_equipment_request_all,hr.equipment_request - all,model_hr_equipment_request,,1,0,0,0
+hr_equipment_request_detail_employee,hr.equipment_request_detail - user,model_hr_equipment_request_detail,base.group_user,1,1,1,1
+hr_equipment_request_detail_all,hr.equipment_request_detail - all,model_hr_equipment_request_detail,,1,0,0,0
