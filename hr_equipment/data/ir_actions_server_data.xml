@@ -19,13 +19,13 @@ employee = employees[0]
 if not employee.address_id:
     raise Warning("No link to partner data")
 
-location = object.address_id.property_stock_employee_id
+location = employee.address_id.property_stock_employee_id
 
 if not location:
     raise Warning("No equipment location defined")
 
-waction = env.ref("stock.menu_quants").read()[0]
-waction["name"] = "My Equipment"
+waction = env.ref("stock.quantsact").read()[0]
+waction["name"] = "My Equipments"
 waction["domain"] = [('location_id','=',location.id)]
 action = waction
     </field>
